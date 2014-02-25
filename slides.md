@@ -162,7 +162,23 @@ Stage all local modifications:
 
 ---
 
-### What's changed?
+## Removing and renaming files
+
+Remove a file from your repository:
+
+    $ git rm myfile.txt
+
+Renaming a file:
+
+    $ git mv myfile.txt anotherfile.txt
+
+And commit the changes:
+
+    $ git commit
+
+---
+
+## What's changed?
 
 To see files in your working copy that have been modified:
 
@@ -171,6 +187,18 @@ To see files in your working copy that have been modified:
 To see how your working copy differs from the repository:
 
     $ git diff
+
+---
+
+## Viewing history
+
+To view the commit messages in your repository:
+
+    $ git log
+
+To see the commits along with the changes they introduced:
+
+    $ git log -p
 
 ---
 
