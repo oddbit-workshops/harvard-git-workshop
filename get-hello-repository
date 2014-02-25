@@ -1,0 +1,4 @@
+#!/bin/sh
+
+git clone git://git.savannah.gnu.org/hello.git
+
