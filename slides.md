@@ -171,7 +171,6 @@ Which looks something like this:
      create mode 100755 tests/last-1
      create mode 100755 tests/traditional-1
 
-
 ---
 
 ## Adding files/modifications
@@ -323,6 +322,34 @@ The output of `git log -p` looks something like this:
 
 ---
 
+## Tags
+
+To apply a symbolic name ("tag") to the current commit:
+
+    $ git tag mytag
+
+To view existing tags:
+
+    $ git tag
+
+---
+
+## Branches
+
+To create a new branch based on your current branch:
+
+    $ git checkout -b newbranch
+
+To create a new branch based on a specific commit:
+
+    $ git checkout -b bugfixes/1.0 version_1.0
+
+To switch between branches:
+
+    $ git checkout <branchname>
+
+---
+
 # When good code goes bad
 
 ---
@@ -351,9 +378,40 @@ To revert changes made in an earlier commit:
 
     $ git revert <commit>
 
-E.g:
+For example:
 
     $ git revert 8b8cc60
+
+---
+
+## Throwing away history
+
+`git reset` discards history from your repository.  To get rid of
+all commits after a specific commit:
+
+    $ git reset <commit>
+
+For example:
+
+    $ git reset HEAD~
+
+This command *does not affect your working copy*.
+
+
+To also affect your working copy, add `--hard`:
+
+    $ git reset --hard HEAD~
+
+
+Reasons to reset:
+
+- You've made a series of bad local commits and you want to do them
+  over in a more organized fashion.
+
+- You want to discard a bunch of local (uncommitted) modifications and
+  return return to `HEAD`:
+
+      git reset --hard HEAD
 
 ---
 
@@ -442,7 +500,6 @@ E.g:
      TODO | 2 ++
      1 file changed, 2 insertions(+)
 
-
 ---
 
 # A story of conflict
@@ -520,6 +577,18 @@ E.g:
         * submit a new hello.pot.
 
     end of file TODO
+
+
+To fix the conflict:
+
+- Manually correct the file.
+- Add the changes to the repository:
+
+      git add TODO
+
+- Commit the changes
+
+      git commit
 
 ---
 
