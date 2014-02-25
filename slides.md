@@ -352,6 +352,29 @@ To switch between branches:
 
 ---
 
+## Branches: Merging
+
+To merge the changes in another branch into your current branch:
+
+    $ git merge newfeature
+
+
+![Working on two branches](assets/merge_1.svg)
+
+
+![Merging a barnch](assets/merge_2.svg)
+
+
+<!-- -->
+
+    $ git merge newfeature
+    Updating 25d039f..1baae6b
+    Fast-forward
+     slides.md | 14 ++++++++++++++
+      1 file changed, 14 insertions(+)
+
+---
+
 # When good code goes bad
 
 ---
