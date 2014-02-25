@@ -78,6 +78,27 @@ working copy back to the repository.
 - (*noun*) The state of your project at a certain point in time.
 - (*verb*) To record the current state of your files in the repository.
 
+
+In `git`, commits are uniquely identified by a 40 character hash, like
+this:
+
+    d8c554432e316851f7e66e0e7d8bfc8f08083618
+
+But you can also name them using abbreviated hashes:
+
+    d8c55
+
+And by a variety of symbolic names:
+
+    master
+    HEAD
+    version_1.0
+
+
+If you are curious:
+
+    git rev-parse --help
+
 ---
 
 ## Branches and tags
@@ -132,9 +153,28 @@ Add all your files to the repository:
     $ git add .
     $ git commit -m "added all my files"
 
+
+Which looks something like this:
+
+    $ cd hello-2.9
+    $ git init
+    Initialized empty Git repository in /home/lkellogg/projects/harvard-git-workshop/sandbox/hello-2.9/.git/
+    $ git add .
+    $ git commit -m 'initial import'
+    [master (root-commit) d8c5544] initial import
+     291 files changed, 90160 insertions(+)
+     create mode 100644 ABOUT-NLS
+     create mode 100644 AUTHORS
+    .
+    .
+    .
+     create mode 100755 tests/last-1
+     create mode 100755 tests/traditional-1
+
+
 ---
 
-## Adding files
+## Adding files/modifications
 
 Stage changes to be committed:
 
@@ -188,6 +228,45 @@ To see how your working copy differs from the repository:
 
     $ git diff
 
+
+Output of `git status` with no pending changes:
+
+    $ git status
+    # On branch master
+    nothing to commit, working directory clean
+
+
+Output of `git status` with modified files in the working copy:
+
+    $ git status
+    # On branch master
+    # Changes not staged for commit:
+    #   (use "git add <file>..." to update what will be committed)
+    #   (use "git checkout -- <file>..." to discard changes in working directory)
+    #
+    #	modified:   src/hello.c
+    #
+    no changes added to commit (use "git add" and/or "git commit -a")
+
+
+Output of `git diff` with modified files in the working copy:
+
+    $ git diff
+    diff --git a/src/hello.c b/src/hello.c
+    index 8c36915..b546447 100644
+    --- a/src/hello.c
+    +++ b/src/hello.c
+    @@ -16,6 +16,9 @@
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+     
+    +#define PACKAGE_NAME "harvard_hello"
+    +#define PACKAGE_URL "http://harvard.edu/harvard_hello"
+    +
+     #include <config.h>
+     #include "system.h"
+     #include "progname.h"
+
 ---
 
 ## Viewing history
@@ -200,23 +279,81 @@ To see the commits along with the changes they introduced:
 
     $ git log -p
 
+
+The output of `git log` looks something like this:
+
+    commit 99bbf5e53f3d4c5cc7d3f9f0da0e03426e200695
+    Author: Sami Kerola <kerolasa@iki.fi>
+    Date:   Wed Nov 20 00:59:37 2013 +0000
+
+        add git-version-gen from gnulib/build-aux
+        
+        * configure.ac: change AC_INIT version to call a script
+        * git-version-gen: add version determinator script
+
+    commit 7037566cb87ea8ad59a9ab7079225510cef84ddd
+    Author: Reuben Thomas <rrt@sc3d.org>
+    Date:   Thu Oct 10 14:19:04 2013 +0100
+
+        Update Thai strings.
+
+
+The output of `git log -p` looks something like this:
+
+    commit 3a74f02ba241a8e2517362df6fd68dac462e60d5
+    Author: Lars Kellogg-Stedman <lars@redhat.com>
+    Date:   Mon Feb 24 23:05:52 2014 -0500
+
+        a sample change
+
+    diff --git a/src/hello.c b/src/hello.c
+    index 8c36915..b546447 100644
+    --- a/src/hello.c
+    +++ b/src/hello.c
+    @@ -16,6 +16,9 @@
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+     
+    +#define PACKAGE_NAME "harvard_hello"
+    +#define PACKAGE_URL "http://oddbit.com/harvard_hello"
+    +
+     #include <config.h>
+     #include "system.h"
+     #include "progname.h"
+
 ---
 
-## Reverting changes
+# When good code goes bad
 
-If you want to discard edits to a file that you have not yet
+---
+
+## Fixing a commit
+
+If you commit some changes but realize you forgot something:
+
+    $ git add file_i_forgot.txt
+    $ git commit --amend
+
+---
+
+## Discarding changes to a file
+
+To discards edits that you have made to a file but have not yet
 committed:
 
-    $ git checkout file1
+    $ git checkout -- myfile.txt
 
 ---
 
-## Cloning a remote repository
+## Reverting a previous commit
 
-    $ git clone git@code.seas.harvard.edu:myteam/myproject.git
+To revert changes made in an earlier commit:
 
-This results in working directory `myproject` with the repository data
-in `myproject/.git/`.
+    $ git revert <commit>
+
+E.g:
+
+    $ git revert 8b8cc60
 
 ---
 
@@ -234,9 +371,37 @@ in `myproject/.git/`.
 
 ![Alice pushes code to a remote repository](assets/initial_push.svg)
 
+
+<!-- -->
+
+    $ git remote add origin git@code.seas.harvard.edu:myteam/myproject.git
+    $ git push -u origin master
+    Counting objects: 4193, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (1072/1072), done.
+    Writing objects: 100% (4193/4193), 7.65 MiB | 0 bytes/s, done.
+    Total 4193 (delta 3095), reused 4193 (delta 3095)
+    To ../hello-remote.git/
+     * [new branch]      master -> master
+    Branch master set up to track remote branch master from origin.
+
 ---
 
 ![Bob clones remote repository](assets/clone.svg)
+
+
+<!-- -->
+
+    $ git clone git@code.seas.harvard.edu:myteam/myproject.git
+    Cloning into 'myproject'...
+    done.
+
+
+<!-- -->
+
+    $ git remote -v
+    origin  git@code.seas.harvard.edu:myteam/myproject.git (fetch)
+    origin  git@code.seas.harvard.edu:myteam/myproject.git (push)
 
 ---
 
@@ -246,9 +411,37 @@ in `myproject/.git/`.
 
 ![Alice pushes changes to remote server](assets/push.svg)
 
+
+<!-- -->
+
+    $ git push
+    Counting objects: 5, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (3/3), done.
+    Writing objects: 100% (3/3), 348 bytes | 0 bytes/s, done.
+    Total 3 (delta 1), reused 0 (delta 0)
+    To git@code.seas.harvard.edu:myteam/myproject.git
+       f95bae7..f9120d5  master -> master
+
 ---
 
 ![Bob updates local repository from remote server](assets/pull.svg)
+
+
+<!-- -->
+
+    $ git pull
+    remote: Counting objects: 5, done.
+    remote: Compressing objects: 100% (3/3), done.
+    remote: Total 3 (delta 1), reused 0 (delta 0)
+    Unpacking objects: 100% (3/3), done.
+    From git@code.seas.harvard.edu:myteam/myproject.git
+       f95bae7..f9120d5  master     -> origin/master
+    Updating f95bae7..f9120d5
+    Fast-forward
+     TODO | 2 ++
+     1 file changed, 2 insertions(+)
+
 
 ---
 
@@ -266,13 +459,67 @@ in `myproject/.git/`.
 
 ![Alice tries to push her changes](assets/two_edits_conflict.svg)
 
+
+<!-- -->
+
+    $ git push
+    To git@code.seas.harvard.edu:myteam/myproject.git
+     ! [rejected]        master -> master (non-fast-forward)
+    error: failed to push some refs to '../hello-remote.git/'
+    hint: Updates were rejected because the tip of your current branch is behind
+    hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+    hint: before pushing again.
+    hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
 ---
 
 ![Alice merges Bob's changes into her repository](assets/two_edits_merge.svg)
 
+
+<!-- -->
+
+    $ git pull
+    Auto-merging TODO
+    Merge made by the 'recursive' strategy.
+     TODO | 2 +-
+     1 file changed, 1 insertion(+), 1 deletion(-)
+
 ---
 
 ![Alice is now able to push her changes to the remote repository](assets/two_edits_final.svg)
+
+---
+
+## But what if Alice and Bob made overlapping changes?
+
+    $ git pull
+    remote: Counting objects: 10, done.
+    remote: Compressing objects: 100% (6/6), done.
+    remote: Total 6 (delta 3), reused 0 (delta 0)
+    Unpacking objects: 100% (6/6), done.
+    From git@code.seas.harvard.edu:myteam/myproject.git
+       1827d91..dab8832  master     -> origin/master
+    Auto-merging TODO
+    CONFLICT (content): Merge conflict in TODO
+    Automatic merge failed; fix conflicts and then commit the result.
+
+
+<!-- -->
+
+    WRITE MORE CODE
+
+    GNU hello --- TODO
+
+    Todo:
+
+    <<<<<<< HEAD
+        * Write more awesome code.
+    =======
+        * buy new laptop
+    >>>>>>> dab88328f5f521bbd40135e36110d33924d0f529
+        * submit a new hello.pot.
+
+    end of file TODO
 
 ---
 
@@ -355,4 +602,25 @@ Select an editor.  This will be used when `git` requires you to enter
 extended information (like a commit message):
 
     $ git config --global core.editor <YOUR EDITOR>
+
+---
+
+# For more information
+
+- [Pro Git][], by Scott Chacon
+
+  Very well written with both introductory and advanced topics.
+
+- [try.github.io][]
+
+  This interactive tutorial provides a hands-on introduction to the
+  git command line.
+
+- [Git Immersion][]
+
+  Teaches git through a series of practical exercises.
+
+[pro git]: http://git-scm.com/book/
+[try.github.io]: http://git-scm.com/book/
+[git immersion]: http://gitimmersion.com/
 
