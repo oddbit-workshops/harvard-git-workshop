@@ -2,6 +2,8 @@
 
 Lars Kellogg-Stedman <lars@oddbit.com>
 
+<http://oddbit-workshops.github.io/harvard-git-workshop/>
+
 ---
 
 ## Why are we here?
@@ -692,4 +694,17 @@ extended information (like a commit message):
 [pro git]: http://git-scm.com/book/
 [try.github.io]: http://git-scm.com/book/
 [git immersion]: http://gitimmersion.com/
+
+---
+
+## About these slides
+
+- The source for these slides is available from
+  https://github.com/oddbit-workshops/harvard-git-workshop/.
+
+- These slides are written in [Markdown][] and rendered
+  using [reveal.js].
+
+[markdown]: http://daringfireball.net/projects/markdown/
+[reveal.js]: https://github.com/hakimel/reveal.js/
 
